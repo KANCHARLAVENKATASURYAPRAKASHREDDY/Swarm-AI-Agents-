@@ -29,7 +29,7 @@ The **Digital Twin Simulation** uses a swarm of cooperating AI agents to model h
 | **Observer** | Silent data analyst that records tone, reasoning quality, and probability metrics turn-by-turn |
 | **Environmentalist** | Injects unpredictable real-world disruptions (phone calls, market news, technical glitches) to test adaptability |
 
-After the simulation, an **AfterActionReport** synthesises all agent data into an actionable performance review.
+After the simulation, an **AfterActionReport** synthesizes all agent data into an actionable performance review.
 
 ---
 
@@ -66,16 +66,20 @@ Each turn computes a **success probability** (0–1) derived from the user's pro
 
 ### Antagonist (`src/agents/antagonist.py`)
 - Plays a realistic counterpart whose tone adapts to `P(success)`.
-- Three pressure levels: `low` (< 0.4), `medium` (0.4–0.65), `high` (> 0.65).
+- Three performance tiers map `P(success)` to response style:
+  - `low` (< 0.4) — sceptical, challenging tone (user is underperforming).
+  - `medium` (0.4–0.65) — neutral, probing tone.
+  - `high` (> 0.65) — encouraging, positive tone (user is excelling).
 - Scenario-specific personas: *Interviewer*, *Manager*, *Client*.
 
 ### Observer (`src/agents/observer.py`)
 - Silently monitors every turn — the user never sees its output during the simulation.
-- Analyses response length, presence of reasoning connectors (`because`, `therefore`, `specifically`, …), and performance trajectory.
+- Analyzes response length, presence of reasoning connectors (`because`, `therefore`, `specifically`, …), and performance trajectory.
 - Accumulates structured notes fed directly into the AAR.
 
 ### Environmentalist (`src/agents/environmentalist.py`)
 - Injects contextual disruptions at a configurable frequency (default 35%).
+- The frequency is controlled by the `event_frequency` parameter of `SimulationEngine` (a float between 0.0 and 1.0).
 - Events are scenario-specific and non-repeating within a session.
 - The first turn is always event-free to give the simulation a clean start.
 
